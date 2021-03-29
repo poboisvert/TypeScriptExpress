@@ -17,6 +17,11 @@ router.get("/login", (req: Request, res: Response) => {
   <button>Button</button>
   </form>
   `);
+
+  router.post("/login", (req: Request, res: Response) => {
+    const { email, password } = req.body;
+    res.send(email + password);
+  });
 });
 
 export { router }; // {} Export a variable already declared

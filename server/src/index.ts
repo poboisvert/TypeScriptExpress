@@ -2,6 +2,7 @@ console.log("TS INIT");
 
 import express from "express";
 import { router } from "./routes/loginRoutes";
+import bodyParser from "body-parser";
 
 const app = express(); // Init middleware
 const PORT = 3000; // Express user app port
@@ -15,6 +16,7 @@ const PORT = 3000; // Express user app port
     </div>`);
 }); */
 
+app.use(bodyParser.urlencoded({ extended: true })); // Middleware agg. post content
 app.use(router);
 
 app.listen(PORT, () => {
