@@ -1,5 +1,11 @@
 import { Router, Response, Request } from "express";
 
+// TS Interface validation
+interface RequestWithBody extends Request {
+  body: { [key: string]: string | undefined }; // Override body in Request
+}
+
+// VARIABLE DELCARATION
 const router = Router();
 
 router.get("/login", (req: Request, res: Response) => {
@@ -18,9 +24,14 @@ router.get("/login", (req: Request, res: Response) => {
   </form>
   `);
 
-  router.post("/login", (req: Request, res: Response) => {
+  router.post("/login", (req: RequestWithBody, res: Response) => {
     const { email, password } = req.body;
-    res.send(email + password);
+    // res.send(email + password);
+    if (email && password && email === "test@test.com" && password === "test") {
+      res.send(email.toUpperCase()); // Need type guard
+    } else {
+      res.send("Invalid email");
+    }
   });
 });
 
