@@ -22,5 +22,5 @@ app.use(cookieSession({ keys: ["mykey"] })); // cookie navigation middle ware
 app.use(router);
 
 app.listen(PORT, () => {
-  console.log(`àctive on ${PORT}`);
+  console.log(`Active on ${PORT}`);
 });

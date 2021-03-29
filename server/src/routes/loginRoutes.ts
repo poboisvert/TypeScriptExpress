@@ -1,8 +1,17 @@
-import { Router, Response, Request } from "express";
+import { Router, Response, Request, NextFunction } from "express";
 
 // TS Interface validation
 interface RequestWithBody extends Request {
   body: { [key: string]: string | undefined }; // Override body in Request
+}
+
+function requireAuth(req: Request, res: Response, next: NextFunction):void {
+    if (req.session && req.session.loggedIn) {
+        return next()
+    } 
+
+    res.status(403);
+    res.send("Page Blocked")
 }
 
 // VARIABLE DELCARATION
@@ -25,7 +34,6 @@ router.get("/login", (req: Request, res: Response) => {
   `);
 
   // ROUTE - /login
-
   router.post("/login", (req: RequestWithBody, res: Response) => {
     const { email, password } = req.body;
     // res.send(email + password);
@@ -41,27 +49,6 @@ router.get("/login", (req: Request, res: Response) => {
   });
 });
 
-// ROUTE - /
-router.get("/", (req: Request, res: Response) => {
-  //Confirm if session is saved
-  if (req.session && req.session.loggedIn) {
-    // req.session.loggedI RS confirm undefined
-    res.send(`
-    <div>
-    <h3>Hi ${req.session.name}</h3>
-    
-    <a href="/logout">Sign Out</a>
-    </div>`);
-  } else {
-    res.send(`
-    <div>
-        <h3>Please Sign In</h3>
-       <a href="/login">Sign In</a>
-    </div>`);
-  }
-  }
-});
-
 // ROUTE - /logout
 router.get("/logout", (req: Request, res: Response) => { 
     // Reset session
@@ -69,4 +56,38 @@ router.get("/logout", (req: Request, res: Response) => {
     // Redirect
     res.redirect("/");
 }
+
+// ROUTE - /
+router.get("/", (req: Request, res: Response) => {
+    //Confirm if session is saved
+    if (req.session && req.session.loggedIn) {
+      // req.session.loggedI RS confirm undefined
+      res.send(`
+      <div>
+      <h3>Hi ${req.session.name}</h3>
+      <a href="/profile">Profile</a>
+      <a href="/logout">Sign Out</a>
+      </div>`);
+    } else {
+      res.send(`
+      <div>
+          <h3>Please Sign In</h3>
+         <a href="/login">Sign In</a>
+      </div>`);
+    }
+    }
+  });
+  // ROUTE - /
+router.get("/profile", requireAuth, (req: Request, res: Response) => {
+    //Confirm if session is saved
+
+      res.send(`
+      <div>
+          <h3>This route is protected</h3>
+         <a href="/">Home</a>
+      </div>`);
+    }
+
+  });
+  
 export { router }; // {} Export a variable already declared
