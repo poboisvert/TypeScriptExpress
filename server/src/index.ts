@@ -1,6 +1,6 @@
 console.log("TS INIT");
 
-import express, { Response, Request } from "express";
+import express from "express";
 import { router } from "./routes/loginRoutes";
 
 const app = express(); // Init middleware
